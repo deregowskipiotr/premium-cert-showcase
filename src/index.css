@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  /* 1. Custom Color Palette (Stealth Premium & AI Glow) */
+  --color-canvas-bg: #030303;       /* Pure void black for extreme contrast */
+  --color-canvas-card: #09090b;     /* Deep Zinc dark-gray for containers */
+  --color-glow-indigo: #4f46e5;     /* Main AI kinetic energy */
+  --color-glow-cyan: #06b6d4;       /* Secondary accent highlight */
+  --color-glow-white: #f4f4f5;
+  /* 2. Typography Definitions */
+  --font-display: "Arimo", sans-serif;
+  --font-mono: "Roboto", sans-serif;
+  
+  /* 3. Smooth Transitions default */
+  --animate-pulse-slow: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ==========================================================================
+   Global Base Configuration
+   ========================================================================== */
+html, 
+body {
+  background-color: var(--color-canvas-bg);
+  color: #f4f4f5; /* zinc-100 for premium off-white typography */
+  font-family: var(--font-display);
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Premium Selection Highlight */
+::selection {
+  background-color: rgba(79, 70, 229, 0.25);
+  color: #f4f4f5;
+}
+
+/* Custom Scrollbar to match the dark canvas aesthetics */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-canvas-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: #27272a; /* zinc-800 */
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46; /* zinc-700 */
+}
+
+/* ==========================================================================
+   Custom Global Utilities (Tailwind v4 @utility syntax)
+   ========================================================================== */
+
+/* Technical background grid mesh */
+@utility bg-grid-pattern {
+  background-size: 50px 50px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+}
+
+/* Radial Vignette to mask the edges and create center depth */
+@utility bg-vignette {
+  background: radial-gradient(circle at center, transparent 10%, var(--color-canvas-bg) 75%);
+}
+
+/* Glassmorphism effect for the certificate frame and tech cards */
+@utility glass-panel {
+  background: rgba(9, 9, 11, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
