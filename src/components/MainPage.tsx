@@ -1,11 +1,9 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import {
   motion,
-  useMotionValue,
-  useTransform,
-  useSpring,
   type Variants,
 } from "framer-motion";
+import { FileText } from "lucide-react";
 
 /* ───────────────────────────────────────────────────────
    Constants
@@ -45,7 +43,11 @@ function useTypewriter(text: string, startDelay: number, speed = 35) {
 /* ───────────────────────────────────────────────────────
    MainPage Component
    ─────────────────────────────────────────────────────── */
-const MainPage: React.FC = () => {
+interface MainPageProps {
+  onViewSupplement?: () => void;
+}
+
+const MainPage: React.FC<MainPageProps> = ({ onViewSupplement }) => {
   /* ── Timings ────────────────────────────────────────── */
   const T_BOOT_START = 0.4;
   const T_TITLE_START = 2.2;
@@ -67,54 +69,6 @@ const MainPage: React.FC = () => {
     T_BOOT_START * 1000,
     30
   );
-
-  /* ── 3D Tilt & Mouse Tracking ───────────────────────── */
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  const rawX = useMotionValue(0);
-  const rawY = useMotionValue(0);
-  
-  const rotateX = useSpring(useTransform(rawY, [-0.5, 0.5], [18, -18]), {
-    stiffness: 400,
-    damping: 30,
-  });
-  const rotateY = useSpring(useTransform(rawX, [-0.5, 0.5], [-18, 18]), {
-    stiffness: 400,
-    damping: 30,
-  });
-
-  // Glare position (moves opposite to mouse)
-  const glareX = useTransform(rawX, [-0.5, 0.5], [80, 20]);
-  const glareY = useTransform(rawY, [-0.5, 0.5], [80, 20]);
-
-  // Pre-compute glare background to avoid conditional hooks
-  const glareBackground = useTransform(
-    [glareX, glareY],
-    ([gx, gy]: number[]) =>
-      `radial-gradient(circle at ${gx}% ${gy}%, rgba(255,255,255,0.12) 0%, transparent 60%)`
-  );
-
-  const handleMouseMove = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      if (!isInteractive || !cardRef.current) return;
-      const rect = cardRef.current.getBoundingClientRect();
-      const x = (e.clientX - rect.left) / rect.width - 0.5;
-      const y = (e.clientY - rect.top) / rect.height - 0.5;
-      rawX.set(x);
-      rawY.set(y);
-    },
-    [isInteractive, rawX, rawY]
-  );
-
-  const handleMouseEnter = useCallback(() => {
-    setIsHovered(true);
-  }, []);
-
-  const handleMouseLeave = useCallback(() => {
-    setIsHovered(false);
-    rawX.set(0);
-    rawY.set(0);
-  }, [rawX, rawY]);
 
   /* ── Title Words ────────────────────────────────────── */
   const titleWords = TITLE_TEXT.split(" ");
@@ -268,26 +222,18 @@ const MainPage: React.FC = () => {
                 : { duration: 0.5, ease: "easeOut" }
             }
           >
-            {/* Interactive 3D Card */}
+            {/* Interactive Card (No 3D) */}
             <motion.div
-              ref={cardRef}
-              className="relative mx-auto cursor-grab rounded-2xl glass-panel shadow-2xl"
-              style={{
-                rotateX,
-                rotateY,
-                transformStyle: "preserve-3d",
-              }}
-              onMouseMove={handleMouseMove}
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
+              className="relative mx-auto rounded-2xl glass-panel shadow-2xl"
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
             >
-              {/* Certificate Image - Parallax Pop */}
+              {/* Certificate Image */}
               <motion.img
                 src={CERTIFICATE_SRC}
                 alt="Umiejętności Jutra AI Certificate"
                 className="block w-full rounded-2xl"
                 draggable={false}
-                style={{ transform: "translateZ(20px)" }}
               />
 
               {/* ── Diagonal Sheen Sweep ────── */}
@@ -304,17 +250,7 @@ const MainPage: React.FC = () => {
                 style={{
                   background:
                     "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.25) 45%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0.25) 55%, transparent 70%)",
-                  transform: "translateZ(40px)",
                 }}
-              />
-
-              {/* ── Dynamic Glare Overlay ───── */}
-              <motion.div
-                className="pointer-events-none absolute inset-0 rounded-2xl mix-blend-screen"
-                style={{ background: glareBackground, transform: "translateZ(50px)" }}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: isInteractive ? 1 : 0 }}
-                transition={{ duration: 0.8 }}
               />
 
               {/* ── Outer Border Bloom ───────── */}
@@ -337,14 +273,23 @@ const MainPage: React.FC = () => {
         </motion.div>
 
         {/* ── Hint after handover ──────────────── */}
-        <motion.p
-          className="mt-8 px-4 text-center font-mono text-xs tracking-wider text-zinc-500"
+        <motion.div
+          className="mt-8 flex flex-col md:flex-row items-center justify-center gap-4 px-4"
           initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: isInteractive ? 0.4 : 0, y: isInteractive ? 0 : 10 }}
+          animate={{ opacity: isInteractive ? 1 : 0, y: isInteractive ? 0 : 10 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          hover the certificate to interact
-        </motion.p>
+          <p className="hidden font-mono text-xs tracking-wider text-zinc-500 md:block opacity-40">
+            hover the certificate to interact
+          </p>
+          <span className="hidden text-zinc-700 md:block opacity-40">|</span>
+          <button 
+            onClick={onViewSupplement}
+            className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-glow-cyan hover:text-white transition-colors cursor-pointer"
+          >
+            <FileText size={14} /> View Official Supplement
+          </button>
+        </motion.div>
 
         {/* ── Tech Stack Badges ────────────────── */}
         <motion.div
