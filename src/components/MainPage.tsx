@@ -279,17 +279,14 @@ const MainPage: React.FC<MainPageProps> = ({ onViewSupplement }) => {
           animate={{ opacity: isInteractive ? 1 : 0, y: isInteractive ? 0 : 10 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          <p className="hidden font-mono text-xs tracking-wider text-zinc-500 md:block opacity-40">
-            hover the certificate to interact
-          </p>
-          <span className="hidden text-zinc-700 md:block opacity-40">|</span>
           <button 
+            type="button"
             onClick={onViewSupplement}
             className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-glow-cyan hover:text-white transition-colors cursor-pointer"
           >
             <FileText size={14} /> View Official Supplement
           </button>
-        </motion.div>
+        </motion.div> 
 
         {/* ── Tech Stack Badges ────────────────── */}
         <motion.div

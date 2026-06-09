@@ -35,7 +35,7 @@ const SupplementPage: React.FC<SupplementPageProps> = ({ onBack }) => {
         >
           <button
             onClick={onBack}
-            className="flex cursor-pointer items-center gap-2 font-mono text-sm uppercase tracking-widest text-zinc-400 transition-colors hover:text-white"
+            className="flex cursor-pointer items-center gap-2 py-8 md:py-0 font-mono text-sm uppercase tracking-widest text-zinc-400 transition-colors hover:text-glow-white duration-500"
           >
             <ArrowLeft size={16} />
             Back to Showcase
