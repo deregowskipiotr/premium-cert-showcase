@@ -9,7 +9,7 @@ import { FileText } from "lucide-react";
    Constants
    ─────────────────────────────────────────────────────── */
 const SYSTEM_LOG =
-  "[SYSTEM_LOG // CREDENTIAL_VERIFIED: EXAM_ID_UJ_AI_2026]";
+  "[ SYSTEM_LOG // CREDENTIAL_VERIFIED: EXAM_ID_UJ_AI_2026 ]";
 const TITLE_TEXT = "UMIEJĘTNOŚCI JUTRA AI";
 const CERTIFICATE_SRC = "/images/certificate.png";
 const TECH_TOOLS = ["Lovable", "Miro", "ElevenLabs", "NotebookLM", "Gemini Pro"];
@@ -158,7 +158,7 @@ const MainPage: React.FC<MainPageProps> = ({ onViewSupplement }) => {
           transition={{ duration: 0.4, delay: T_BOOT_START }}
         >
           <span
-            className="font-mono text-xs tracking-widest sm:text-sm"
+            className="font-mono text-xs sm:text-sm"
             style={{ color: "var(--color-glow-cyan)" }}
           >
             {logText}
@@ -282,7 +282,7 @@ const MainPage: React.FC<MainPageProps> = ({ onViewSupplement }) => {
           <button 
             type="button"
             onClick={onViewSupplement}
-            className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-glow-cyan hover:text-white transition-colors cursor-pointer"
+            className="flex items-center gap-2 font-mono text-xs uppercase underline text-glow-cyan hover:text-white transition-colors cursor-pointer"
           >
             <FileText size={14} /> View Official Supplement
           </button>
